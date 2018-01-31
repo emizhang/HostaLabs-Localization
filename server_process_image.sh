@@ -11,4 +11,8 @@ python mobilenet_ssd_python.py --image 'new_image.png' --num_classes 90 --protot
 
 #output will be ~/HostaLabs-Localization/samples/dnn/img_data.json
 cd ~/HostaLabs-Localization
+<<<<<<< HEAD
 python server_update_semantic.py
+=======
+python server_update_semantic.py
+>>>>>>> d1870975f105d226a107690a218a83ef5d230e68
