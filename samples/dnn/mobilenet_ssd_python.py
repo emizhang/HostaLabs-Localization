@@ -147,14 +147,14 @@ if __name__ == "__main__":
                 labels)  # dict of labels and their corresponding number of appearances if above a certain confidence threshold
             # print("***--------------------------*** \n%r" % Counter(labels))
             for key, num_appearances in count.items():
-                if num_appearances > 1:
-                    for i in range(num_appearances):
-                        k = "%s #%d" % (key, i + 1)
-                        output[k] = {}
-                        best_confidence[k] = 0
-                else:
-                    output[key] = {}
-                    best_confidence[key] = 0
+                # if num_appearances > 1:
+                #     for i in range(num_appearances):
+                #         k = "%s #%d" % (key, i + 1)
+                #         output[k] = {}
+                #         best_confidence[k] = 0
+                # else:
+                output[key] = {}
+                best_confidence[key] = 0
 
             # print("INIT OUTPUT: ", output, "INIT BEST CONFIDENCE: ", best_confidence)
 
