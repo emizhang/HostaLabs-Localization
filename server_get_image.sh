@@ -9,4 +9,8 @@ wget https://radiant-anchorage-55109.herokuapp.com/get_original_image_recent -O 
 #runs python script to get output
 python mobilenet_ssd_python.py --image 'new_image.png' --num_classes 90 --prototxt 'ssd_mobilenet_v1_coco.pbtxt' --weights 'frozen_inference_graph.pb'
 
+<<<<<<< HEAD
 #output will be ~/HostaLabs-Localization/samples/dnn/img_data.json
+=======
+#output will be img_data.json
+>>>>>>> 4d88aeca409ff75f197899fc8321512e3e52fbcc
