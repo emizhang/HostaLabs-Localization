@@ -242,14 +242,14 @@ original_img = original_img[y1:y2, x1:x2]
 temp_dict = copy.deepcopy(output)
 # # Want to reproduce the image except with only the best (highest confidence) rectangles and their corresponding classes remaining.
 for label, info in temp_dict.items():
-    print(label, info, type(info['confidence']))
+    # print(label, info, type(info['confidence']))
 
     # Converting everything to integers instead of floats
     for data_type, data_number in info.items():
         if data_type == 'confidence':  # Don't want to round confidence score to int since it is a float between 0 and 1
             output[label][
                 data_type] = data_number.item()  # numpy.float32 is incompatible with Python's JSON module when converting, so .item() -> float
-            print(output[label][data_type], type(output[label][data_type]))
+            # print(output[label][data_type], type(output[label][data_type]))
         elif type(data_number) == tuple:
             output[label][data_type] = (int(data_number[0]), int(data_number[1]))
         else:
