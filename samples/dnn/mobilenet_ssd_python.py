@@ -218,10 +218,10 @@ if __name__ == "__main__":
                     #            cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0), 1)  # larger pictures set font=3, thick=3
 
         frame_num += 1
-        image = cv.resize(frame, (720, 540))
-        cv.imshow("detections", image)
-        if cv.waitKey(1) >= 0:
-            break
+        # image = cv.resize(frame, (720, 540))
+        # cv.imshow("detections", image)
+        # if cv.waitKey(1) >= 0:
+        #     break
 
 # Need to crop the original image so that it matches up with the image from frame-by-frame localization step above
 cols = original_img.shape[1]
