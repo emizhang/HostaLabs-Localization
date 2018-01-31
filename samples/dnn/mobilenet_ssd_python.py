@@ -273,6 +273,7 @@ for label, info in temp_dict.items():
     
     cv.rectangle(original_img, bottomleftpt, (bottomleftpt[0] + width, bottomleftpt[1] + height), (0, 255, 0), 1)  # larger pics set thick=4
 
+print("OUTPUT")
 img_width, img_height = (original_img.shape[1], original_img.shape[0])
 print("width/height", img_width, img_height)
     
