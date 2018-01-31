@@ -296,7 +296,7 @@ with open('img_data.json', 'w') as outfile:
 #put back onto server here
 res = requests.get("https://radiant-anchorage-55109.herokuapp.com/get_original_image_recent_with_data")
 data = json.loads(res.text)
-r = requests.post("https://radiant-anchorage-55109.herokuapp.com/update_semantic_data", data = { 'filepath' : data["img_data"]["filepath"], 'data' : output }
+r = requests.post("https://radiant-anchorage-55109.herokuapp.com/update_semantic_data", data = { 'filepath' : data["img_data"]["filepath"], 'data' : output })
 
 
 # img_width, img_height = (original_img.shape[1], original_img.shape[0])
