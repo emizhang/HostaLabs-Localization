@@ -202,10 +202,10 @@ if __name__ == "__main__":
                             "Label: %s\nBottom left point: (%s, %s) \nTop right point: (%s, %s)\nHeight: %s\nWidth: %s\nBest: %r\n\n\n" % (
                             l, xLeftBottom, yLeftBottom, xRightTop, yRightTop, str(height), str(width), output))
 
-                    # label = l + ": " + str(confidence)
-                    # labelSize, baseLine = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-                    # labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
-                    # baseLine = int(baseLine * 0.5)
+                    label = l + ": " + str(confidence)
+                    labelSize, baseLine = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+                    labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
+                    baseLine = int(baseLine * 0.5)
 
                     yLeftBottom = max(yLeftBottom, labelSize[1])
 
