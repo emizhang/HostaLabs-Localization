@@ -17,6 +17,7 @@ import argparse
 from collections import Counter
 import json
 import copy
+import requests
 
 try:
     import cv2 as cv
@@ -29,6 +30,8 @@ inHeight = 300
 WHRatio = inWidth / float(inHeight)
 inScaleFactor = 0.007843
 meanVal = 127.5
+
+r = requests.get("https://radiant-anchorage-55109.herokuapp.com/get_original_image_recent")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -289,6 +292,12 @@ for label, info in temp_dict.items():
 
 with open('img_data.json', 'w') as outfile:
     json.dump(output, outfile)
+
+#put back onto server here
+res = requests.get("https://radiant-anchorage-55109.herokuapp.com/get_original_image_recent_with_data")
+data = json.loads(res.text)
+r = requests.post("https://radiant-anchorage-55109.herokuapp.com/update_semantic_data", data = { 'filepath' : data["img_data"]["filepath"], 'data' : output }
+
 
 # img_width, img_height = (original_img.shape[1], original_img.shape[0])
 # print("width/height", img_width, img_height)
