@@ -156,7 +156,7 @@ if __name__ == "__main__":
                     output[key] = {}
                     best_confidence[key] = 0
 
-            print("INIT OUTPUT: ", output, "INIT BEST CONFIDENCE: ", best_confidence)
+            # print("INIT OUTPUT: ", output, "INIT BEST CONFIDENCE: ", best_confidence)
 
         for i in range(detections.shape[2]):
             confidence = detections[0, 0, i, 2]
@@ -202,20 +202,20 @@ if __name__ == "__main__":
                             "Label: %s\nBottom left point: (%s, %s) \nTop right point: (%s, %s)\nHeight: %s\nWidth: %s\nBest: %r\n\n\n" % (
                             l, xLeftBottom, yLeftBottom, xRightTop, yRightTop, str(height), str(width), output))
 
-                    label = l + ": " + str(confidence)
-                    labelSize, baseLine = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-                    labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
-                    baseLine = int(baseLine * 0.5)
+                    # label = l + ": " + str(confidence)
+                    # labelSize, baseLine = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+                    # labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
+                    # baseLine = int(baseLine * 0.5)
 
                     yLeftBottom = max(yLeftBottom, labelSize[1])
 
-                    # This forms the filled in small white rectangle that is the label (inside of the outer green rectangle)
-                    cv.rectangle(frame, (xLeftBottom, yLeftBottom - labelSize[1]),
-                                 (xLeftBottom + labelSize[0], yLeftBottom + baseLine),
-                                 (255, 255, 255),
-                                 cv.FILLED)  # larger pictures mult labelSize[1]*2, labelSize[0]*3, baseLine*2
-                    cv.putText(frame, label, (xLeftBottom, yLeftBottom),
-                               cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0), 1)  # larger pictures set font=3, thick=3
+                    # # This forms the filled in small white rectangle that is the label (inside of the outer green rectangle)
+                    # cv.rectangle(frame, (xLeftBottom, yLeftBottom - labelSize[1]),
+                    #              (xLeftBottom + labelSize[0], yLeftBottom + baseLine),
+                    #              (255, 255, 255),
+                    #              cv.FILLED)  # larger pictures mult labelSize[1]*2, labelSize[0]*3, baseLine*2
+                    # cv.putText(frame, label, (xLeftBottom, yLeftBottom),
+                    #            cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0), 1)  # larger pictures set font=3, thick=3
 
         frame_num += 1
         image = cv.resize(frame, (720, 540))
