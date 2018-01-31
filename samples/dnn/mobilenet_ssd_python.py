@@ -106,7 +106,7 @@ if __name__ == "__main__":
     frame_num = 0
     PROXIMITY_THRESH = 40  # threshold for how many pixels between two rectangular boxes before they are considered to belong to the same label
 
-    while True:
+    while frame_num < 50:
         # Capture frame-by-frame
         if not is_image:
             ret, frame = cap.read()
@@ -290,15 +290,15 @@ for label, info in temp_dict.items():
 with open('img_data.json', 'w') as outfile:
     json.dump(output, outfile)
 
-img_width, img_height = (original_img.shape[1], original_img.shape[0])
-print("width/height", img_width, img_height)
+# img_width, img_height = (original_img.shape[1], original_img.shape[0])
+# print("width/height", img_width, img_height)
 
-image = cv.resize(original_img, (720, 540))
-cv.imshow("Localizations", image)
-cv.waitKey(0)
+# image = cv.resize(original_img, (720, 540))
+# cv.imshow("Localizations", image)
+# cv.waitKey(0)
 
-print("***--------------------------------***\nFinal rolling average measurements: %r" % output)
-print("LIST OF IDENTIFIED OBJECTS: %r" % list(output.keys()))
+# print("***--------------------------------***\nFinal rolling average measurements: %r" % output)
+# print("LIST OF IDENTIFIED OBJECTS: %r" % list(output.keys()))
 
 
 
