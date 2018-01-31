@@ -267,25 +267,28 @@ for label, info in temp_dict.items():
     #    output[label][0] = best_info
 
 
-    bottomleftpt = info['bottom_left']
-    width = info['width']
-    height = info['height']
-    conf = info['confidence']
-    print(bottomleftpt, width, height, conf)
+    # bottomleftpt = info['bottom_left']
+    # width = info['width']
+    # height = info['height']
+    # conf = info['confidence']
+    # print(bottomleftpt, width, height, conf)
 
-    l = label + ": " + str(conf)
-    labelSize, baseLine = cv.getTextSize(l, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-    labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
-    baseLine = int(baseLine * 0.5)
+    # l = label + ": " + str(conf)
+    # labelSize, baseLine = cv.getTextSize(l, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+    # labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
+    # baseLine = int(baseLine * 0.5)
 
-    cv.rectangle(original_img, (bottomleftpt[0], bottomleftpt[1] - labelSize[1]),
-                 (bottomleftpt[0] + labelSize[0], bottomleftpt[1] + baseLine), (255, 255, 255),
-                 cv.FILLED)  # larger pictures mult labelSize[1]*2, labelSize[0]*3, baseLine*2
-    cv.putText(original_img, l, bottomleftpt, cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0),
-               1)  # larger pictures set font=3, thick=3
+    # cv.rectangle(original_img, (bottomleftpt[0], bottomleftpt[1] - labelSize[1]),
+    #              (bottomleftpt[0] + labelSize[0], bottomleftpt[1] + baseLine), (255, 255, 255),
+    #              cv.FILLED)  # larger pictures mult labelSize[1]*2, labelSize[0]*3, baseLine*2
+    # cv.putText(original_img, l, bottomleftpt, cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0),
+    #            1)  # larger pictures set font=3, thick=3
 
-    cv.rectangle(original_img, bottomleftpt, (bottomleftpt[0] + width, bottomleftpt[1] + height), (0, 255, 0),
-                 1)  # larger pics set thick=4
+    # cv.rectangle(original_img, bottomleftpt, (bottomleftpt[0] + width, bottomleftpt[1] + height), (0, 255, 0),
+    #              1)  # larger pics set thick=4
+
+with open('img_data.json', 'w') as outfile:
+    json.dump(output, outfile)
 
 img_width, img_height = (original_img.shape[1], original_img.shape[0])
 print("width/height", img_width, img_height)
@@ -297,7 +300,6 @@ cv.waitKey(0)
 print("***--------------------------------***\nFinal rolling average measurements: %r" % output)
 print("LIST OF IDENTIFIED OBJECTS: %r" % list(output.keys()))
 
-with open('img_data.json', 'w') as outfile:
-    json.dump(output, outfile)
+
 
 
