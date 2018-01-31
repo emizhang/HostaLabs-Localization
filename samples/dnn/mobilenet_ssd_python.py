@@ -223,81 +223,81 @@ if __name__ == "__main__":
         if cv.waitKey(1) >= 0:
             break
 
-# Need to crop the original image so that it matches up with the image from frame-by-frame localization step above
-cols = original_img.shape[1]
-rows = original_img.shape[0]
+    # Need to crop the original image so that it matches up with the image from frame-by-frame localization step above
+    cols = original_img.shape[1]
+    rows = original_img.shape[0]
 
-if cols / float(rows) > WHRatio:
-    cropSize = (int(rows * WHRatio), rows)
-else:
-    cropSize = (cols, int(cols / WHRatio))
+    if cols / float(rows) > WHRatio:
+        cropSize = (int(rows * WHRatio), rows)
+    else:
+        cropSize = (cols, int(cols / WHRatio))
 
-y1 = int((rows - cropSize[1]) / 2)
-y2 = y1 + cropSize[1]
-x1 = int((cols - cropSize[0]) / 2)
-x2 = x1 + cropSize[0]
-original_img = original_img[y1:y2, x1:x2]
+    y1 = int((rows - cropSize[1]) / 2)
+    y2 = y1 + cropSize[1]
+    x1 = int((cols - cropSize[0]) / 2)
+    x2 = x1 + cropSize[0]
+    original_img = original_img[y1:y2, x1:x2]
 
-# Making a copy of output dictionary so that I can edit output's entries without having to worry about issues when looping through it
-temp_dict = copy.deepcopy(output)
-# Want to reproduce the image except with only the best (highest confidence) rectangles and their corresponding classes remaining.
-for label, info in temp_dict.items():
-    print(label, info, type(info['confidence']))
+    # Making a copy of output dictionary so that I can edit output's entries without having to worry about issues when looping through it
+    temp_dict = copy.deepcopy(output)
+    # Want to reproduce the image except with only the best (highest confidence) rectangles and their corresponding classes remaining.
+    for label, info in temp_dict.items():
+        print(label, info, type(info['confidence']))
 
-    # Converting everything to integers instead of floats
-    for data_type, data_number in info.items():
-        if data_type == 'confidence':  # Don't want to round confidence score to int since it is a float between 0 and 1
-            output[label][
-                data_type] = data_number.item()  # numpy.float32 is incompatible with Python's JSON module when converting, so .item() -> float
-            print(output[label][data_type], type(output[label][data_type]))
-        elif type(data_number) == tuple:
-            output[label][data_type] = (int(data_number[0]), int(data_number[1]))
-        else:
-            output[label][data_type] = int(data_number)
+        # Converting everything to integers instead of floats
+        for data_type, data_number in info.items():
+            if data_type == 'confidence':  # Don't want to round confidence score to int since it is a float between 0 and 1
+                output[label][
+                    data_type] = data_number.item()  # numpy.float32 is incompatible with Python's JSON module when converting, so .item() -> float
+                print(output[label][data_type], type(output[label][data_type]))
+            elif type(data_number) == tuple:
+                output[label][data_type] = (int(data_number[0]), int(data_number[1]))
+            else:
+                output[label][data_type] = int(data_number)
 
-    # if len(info) > 1:
-    #    best_conf = 0
-    #    best_info_ind = 0
-    #    for ind, a in enumerate(info):
-    #        if a[3] > best_conf:
-    #            best_info_ind = ind
-    #            best_conf = a[3]
-    #
-    #    best_info = info[best_info_ind]
-    #    output[label][0] = best_info
+        # if len(info) > 1:
+        #    best_conf = 0
+        #    best_info_ind = 0
+        #    for ind, a in enumerate(info):
+        #        if a[3] > best_conf:
+        #            best_info_ind = ind
+        #            best_conf = a[3]
+        #
+        #    best_info = info[best_info_ind]
+        #    output[label][0] = best_info
 
 
-    bottomleftpt = info['bottom_left']
-    width = info['width']
-    height = info['height']
-    conf = info['confidence']
-    print(bottomleftpt, width, height, conf)
+        bottomleftpt = info['bottom_left']
+        width = info['width']
+        height = info['height']
+        conf = info['confidence']
+        print(bottomleftpt, width, height, conf)
 
-    l = label + ": " + str(conf)
-    labelSize, baseLine = cv.getTextSize(l, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-    labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
-    baseLine = int(baseLine * 0.5)
+        l = label + ": " + str(conf)
+        labelSize, baseLine = cv.getTextSize(l, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+        labelSize = (int(labelSize[0] * 0.5), int(labelSize[1] * 0.5))
+        baseLine = int(baseLine * 0.5)
 
-    cv.rectangle(original_img, (bottomleftpt[0], bottomleftpt[1] - labelSize[1]),
-                 (bottomleftpt[0] + labelSize[0], bottomleftpt[1] + baseLine), (255, 255, 255),
-                 cv.FILLED)  # larger pictures mult labelSize[1]*2, labelSize[0]*3, baseLine*2
-    cv.putText(original_img, l, bottomleftpt, cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0),
-               1)  # larger pictures set font=3, thick=3
+        cv.rectangle(original_img, (bottomleftpt[0], bottomleftpt[1] - labelSize[1]),
+                     (bottomleftpt[0] + labelSize[0], bottomleftpt[1] + baseLine), (255, 255, 255),
+                     cv.FILLED)  # larger pictures mult labelSize[1]*2, labelSize[0]*3, baseLine*2
+        cv.putText(original_img, l, bottomleftpt, cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0),
+                   1)  # larger pictures set font=3, thick=3
 
-    cv.rectangle(original_img, bottomleftpt, (bottomleftpt[0] + width, bottomleftpt[1] + height), (0, 255, 0),
-                 1)  # larger pics set thick=4
+        cv.rectangle(original_img, bottomleftpt, (bottomleftpt[0] + width, bottomleftpt[1] + height), (0, 255, 0),
+                     1)  # larger pics set thick=4
 
-img_width, img_height = (original_img.shape[1], original_img.shape[0])
-print("width/height", img_width, img_height)
+    img_width, img_height = (original_img.shape[1], original_img.shape[0])
+    print("width/height", img_width, img_height)
 
-image = cv.resize(original_img, (720, 540))
-cv.imshow("Localizations", image)
-cv.waitKey(0)
+    image = cv.resize(original_img, (720, 540))
+    cv.imshow("Localizations", image)
+    cv.waitKey(0)
 
-print("***--------------------------------***\nFinal rolling average measurements: %r" % output)
-print("LIST OF IDENTIFIED OBJECTS: %r" % list(output.keys()))
+    print("***--------------------------------***\nFinal rolling average measurements: %r" % output)
+    print("LIST OF IDENTIFIED OBJECTS: %r" % list(output.keys()))
 
-with open('img_data.json', 'w') as outfile:
-    json.dump(output, outfile)
+    with open('img_data.json', 'w') as outfile:
+        json.dump(output, outfile)
 
 
