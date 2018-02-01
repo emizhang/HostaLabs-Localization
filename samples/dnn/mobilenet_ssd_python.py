@@ -51,7 +51,7 @@ if __name__ == "__main__":
                         help="Number of classes. It's 20 for Caffe model from "
                              "https://github.com/chuanqi305/MobileNet-SSD/ and 90 for "
                              "TensorFlow model from http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_11_06_2017.tar.gz")
-    parser.add_argument("--thr", default=0.1, type=float, help="confidence threshold to filter out weak detections")
+    parser.add_argument("--thr", default=0., type=float, help="confidence threshold to filter out weak detections")
     args = parser.parse_args()
 
     if args.num_classes == 20:
