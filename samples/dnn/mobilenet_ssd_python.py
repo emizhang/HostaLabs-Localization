@@ -31,8 +31,6 @@ WHRatio = inWidth / float(inHeight)
 inScaleFactor = 0.007843
 meanVal = 127.5
 
-r = requests.get("http://ec2-52-91-230-86.compute-1.amazonaws.com/get_original_image_recent")
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Script to run MobileNet-SSD object detection network '
@@ -85,10 +83,10 @@ if __name__ == "__main__":
                       80: 'toaster', 81: 'sink', 82: 'refrigerator', 84: 'book', 85: 'clock',
                       86: 'vase', 87: 'scissors', 88: 'teddy bear', 89: 'hair drier', 90: 'toothbrush'}
         
-        kitchen_list = ['cat', 'dog', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon'
-                        'bowl', 'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza'
-                        'donut', 'cake', 'chair', 'potted plant', 'dining table', 'laptop', 'cell phone', 'microwave'
-                        'oven', 'toaster', 'sink', 'refrigerator']
+    kitchen_list = ['cat', 'dog', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon'
+                    'bowl', 'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza'
+                    'donut', 'cake', 'chair', 'potted plant', 'dining table', 'laptop', 'cell phone', 'microwave'
+                    'oven', 'toaster', 'sink', 'refrigerator']
 
     is_image = False
     if args.video:
