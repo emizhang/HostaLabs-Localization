@@ -52,6 +52,7 @@ if __name__ == "__main__":
     parser.add_argument("--thr", default=0.1, type=float, help="confidence threshold to filter out weak detections")
     args = parser.parse_args()
 
+    #If using caffe model
     if args.num_classes == 20:
         net = cv.dnn.readNetFromCaffe(args.prototxt, args.weights)
         swapRB = False
@@ -61,6 +62,8 @@ if __name__ == "__main__":
                       10: 'cow', 11: 'diningtable', 12: 'dog', 13: 'horse',
                       14: 'motorbike', 15: 'person', 16: 'pottedplant',
                       17: 'sheep', 18: 'sofa', 19: 'train', 20: 'tvmonitor'}
+    #if there are 90 classes/using tensorflow model
+    #in future can expand (elif else etc) if find better classification model ie Google/Watson API
     else:
         assert (args.num_classes == 90)
         net = cv.dnn.readNetFromTensorflow(args.weights, args.prototxt)
@@ -82,12 +85,16 @@ if __name__ == "__main__":
                       75: 'remote', 76: 'keyboard', 77: 'cell phone', 78: 'microwave', 79: 'oven',
                       80: 'toaster', 81: 'sink', 82: 'refrigerator', 84: 'book', 85: 'clock',
                       86: 'vase', 87: 'scissors', 88: 'teddy bear', 89: 'hair drier', 90: 'toothbrush'}
-        
+    
+    #hardcoded for now to only have kitchens
+    #intersection between what is in a kitchen and classes in tensorflow model
+    #would need to change/generalize if use a different model    
     kitchen_list = ['cat', 'dog', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon'
                     'bowl', 'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza'
                     'donut', 'cake', 'chair', 'potted plant', 'dining table', 'laptop', 'cell phone', 'microwave'
                     'oven', 'toaster', 'sink', 'refrigerator']
 
+    #determind processing based on if input is an image or video
     is_image = False
     if args.video:
         cap = cv.VideoCapture(args.video)
@@ -98,7 +105,8 @@ if __name__ == "__main__":
     else:
         cap = cv.VideoCapture(0)
 
-    # output is a dictionary of dictionaries that will store the class:informatoin of info type mapped to corresponding final bottom left point, height, and width of the rectangular box
+    # output is a dictionary of dictionaries that will store the class:information of info type mapped to corresponding final bottom left point, height, and width of the rectangular box
+    #coordinate system has bottom left corner as 0,0 and pixels counted right and up
     output = {}
     best_LeftBottom_pt = (0, 0)
     best_height = 0
@@ -107,7 +115,7 @@ if __name__ == "__main__":
     frame_num = 0
     PROXIMITY_THRESH = 40  # threshold for how many pixels between two rectangular boxes before they are considered to belong to the same label
 
-    while frame_num < 50:
+    while frame_num < 50: #arbitrary number of times to run before finding average
         # Capture frame-by-frame
         if not is_image:
             ret, frame = cap.read()
@@ -132,6 +140,7 @@ if __name__ == "__main__":
         cols = frame.shape[1]
         rows = frame.shape[0]
 
+        #NOTE: NOT IMPLEMENTED YET--NEED TO DO
         # Plan to handle repeats of the same label:
         # 1. Initialize output dict so that this can be reflected (easy with Counter)
         # 2. Use proximity threshold to determine which rectangles should be considered the same
@@ -148,6 +157,7 @@ if __name__ == "__main__":
                 labels)  # dict of labels and their corresponding number of appearances if above a certain confidence threshold
             # print("***--------------------------*** \n%r" % Counter(labels))
             for key, num_appearances in count.items():
+                # COMMENTED OUT PART=partway implementation of handling the same label
                 # if num_appearances > 1:
                 #     for i in range(num_appearances):
                 #         k = "%s #%d" % (key, i + 1)
@@ -159,6 +169,7 @@ if __name__ == "__main__":
 
             # print("INIT OUTPUT: ", output, "INIT BEST CONFIDENCE: ", best_confidence)
 
+        #determine classifications of items found and fill out output dictionary
         for i in range(detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             class_id = int(detections[0, 0, i, 1])
@@ -192,8 +203,7 @@ if __name__ == "__main__":
                             output[l]['height'] = best_height
                             output[l]['confidence'] = best_confidence[l]
                         except KeyError:
-                            output[
-                                l] = {}  # Initialize the label's dictionary to store info if it wasn't recognized at first
+                            output[l] = {}  # Initialize the label's dictionary to store info if it wasn't recognized at first
                             output[l]['bottom_left'] = best_LeftBottom_pt
                             output[l]['width'] = best_width
                             output[l]['height'] = best_height
@@ -210,6 +220,7 @@ if __name__ == "__main__":
 
                     yLeftBottom = max(yLeftBottom, labelSize[1])
 
+                    # REMOVED VISUALIZATION FOR SERVER VERSION 
                     # # This forms the filled in small white rectangle that is the label (inside of the outer green rectangle)
                     # cv.rectangle(frame, (xLeftBottom, yLeftBottom - labelSize[1]),
                     #              (xLeftBottom + labelSize[0], yLeftBottom + baseLine),
@@ -219,6 +230,7 @@ if __name__ == "__main__":
                     #            cv.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 0), 1)  # larger pictures set font=3, thick=3
 
         frame_num += 1
+        # REMOVED USER INTERACTION TO DETERMINE HOW LONG TO PROCESS BEFORE TAKING AN AVERAGE
         # image = cv.resize(frame, (720, 540))
         # cv.imshow("detections", image)
         # if cv.waitKey(1) >= 0:
@@ -248,14 +260,14 @@ for label, info in temp_dict.items():
     # Converting everything to integers instead of floats
     for data_type, data_number in info.items():
         if data_type == 'confidence':  # Don't want to round confidence score to int since it is a float between 0 and 1
-            output[label][
-                data_type] = data_number.item()  # numpy.float32 is incompatible with Python's JSON module when converting, so .item() -> float
+            output[label][data_type] = data_number.item()  # numpy.float32 is incompatible with Python's JSON module when converting, so .item() -> float
             # print(output[label][data_type], type(output[label][data_type]))
         elif type(data_number) == tuple:
             output[label][data_type] = (int(data_number[0]), int(data_number[1]))
         else:
             output[label][data_type] = int(data_number)
 
+    # REMOVED MORE VISUALIZATION THINGS
     # if len(info) > 1:
     #    best_conf = 0
     #    best_info_ind = 0
@@ -288,16 +300,18 @@ for label, info in temp_dict.items():
     # cv.rectangle(original_img, bottomleftpt, (bottomleftpt[0] + width, bottomleftpt[1] + height), (0, 255, 0),
     #              1)  # larger pics set thick=4
 
+#write output to json file
 with open('img_data.json', 'w') as outfile:
     json.dump(output, outfile)
 
-#put back onto server here
+#put data back onto server here
 res = requests.get("http://ec2-52-91-230-86.compute-1.amazonaws.com/get_original_image_recent_with_data")
 data = json.loads(res.text)
 out_data = json.dumps(output)
 r = requests.post("http://ec2-52-91-230-86.compute-1.amazonaws.com/update_semantic_data", data = { 'filepath' : data["img_data"]["filepath"], 'data' : out_data })
 print(r)
 
+#MORE VISUALIZATION THINGS REMOVED FOR SERVER VERSION
 # img_width, img_height = (original_img.shape[1], original_img.shape[0])
 # print("width/height", img_width, img_height)
 
